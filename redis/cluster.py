@@ -361,6 +361,7 @@ class RedisCluster(RedisClusterCommands):
     )
 
     CLUSTER_COMMANDS_RESPONSE_CALLBACKS = {
+        "CLUSTER MYID": str_if_bytes,
         "CLUSTER ADDSLOTS": bool,
         "CLUSTER ADDSLOTSRANGE": bool,
         "CLUSTER COUNT-FAILURE-REPORTS": int,

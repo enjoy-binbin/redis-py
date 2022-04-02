@@ -709,6 +709,7 @@ class AbstractRedis:
         "CLIENT PAUSE": bool_ok,
         "CLIENT GETREDIR": int,
         "CLIENT TRACKINGINFO": lambda r: list(map(str_if_bytes, r)),
+        "CLUSTER MYID": str_if_bytes,
         "CLUSTER ADDSLOTS": bool_ok,
         "CLUSTER ADDSLOTSRANGE": bool_ok,
         "CLUSTER COUNT-FAILURE-REPORTS": lambda x: int(x),
