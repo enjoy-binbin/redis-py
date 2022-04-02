@@ -511,6 +511,17 @@ class RedisClusterCommands(
             "CLUSTER SET-CONFIG-EPOCH", epoch, target_nodes=target_nodes
         )
 
+    def cluster_bump_epoch(self, target_node):
+        """
+        Advance the cluster config epoch
+
+        :target_node: 'ClusterNode'
+            The node to execute the command on
+
+        For more information check https://redis.io/commands/cluster-bumpepoch
+        """
+        return self.execute_command("CLUSTER BUMPEPOCH", target_nodes=target_node)
+
     def cluster_setslot(self, target_node, node_id, slot_id, state):
         """
         Bind an hash slot to a specific node

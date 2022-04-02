@@ -1053,6 +1053,15 @@ class TestClusterRedisCommands:
             assert res is True
 
     @skip_if_redis_enterprise()
+    def test_cluster_bump_epoch(self, r):
+        node = r.get_random_node()
+        response = r.cluster_bump_epoch(node)
+        response_str = response.decode("utf-8")
+        result, epoch = response_str.split(" ")
+        assert result in ("BUMPED", "STILL")
+        assert epoch.isdigit()
+
+    @skip_if_redis_enterprise()
     def test_cluster_setslot(self, r):
         node = r.get_random_node()
         mock_node_resp(node, "OK")
