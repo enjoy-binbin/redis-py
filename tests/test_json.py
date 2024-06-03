@@ -453,14 +453,13 @@ def test_json_mget_dollar(client):
     assert_resp_response(client, client.json().get("doc2", "$..a"), res, [res])
 
     # Test mget with single path
-    client.json().mget("doc1", "$..a") == [1, 3, None]
+    assert client.json().mget("doc1", "$..a") == [1, 3, None]
     # Test mget with multi path
-    client.json().mget(["doc1", "doc2"], "$..a") == [[1, 3, None], [4, 6, [None]]]
+    assert client.json().mget(["doc1", "doc2"], "$..a") == [[1, 3, None], [4, 6, [None]]]
 
     # Test missing key
-    client.json().mget(["doc1", "missing_doc"], "$..a") == [[1, 3, None], None]
-    res = client.json().mget(["missing_doc1", "missing_doc2"], "$..a")
-    assert res == [None, None]
+    assert client.json().mget(["doc1", "missing_doc"], "$..a") == [[1, 3, None], None]
+    assert client.json().mget(["missing_doc1", "missing_doc2"], "$..a") == [None, None]
 
 
 def test_numby_commands_dollar(client):
@@ -497,13 +496,13 @@ def test_numby_commands_dollar(client):
 
     # Test legacy NUMINCRBY
     client.json().set("doc1", "$", {"a": "b", "b": [{"a": 2}, {"a": 5.0}, {"a": "c"}]})
-    client.json().numincrby("doc1", ".b[0].a", 3) == 5
+    assert client.json().numincrby("doc1", ".b[0].a", 3) == 5
 
     # Test legacy NUMMULTBY
     client.json().set("doc1", "$", {"a": "b", "b": [{"a": 2}, {"a": 5.0}, {"a": "c"}]})
 
     with pytest.deprecated_call():
-        client.json().nummultby("doc1", ".b[0].a", 3) == 6
+        assert client.json().nummultby("doc1", ".b[0].a", 3) == 6
 
 
 def test_strappend_dollar(client):
@@ -511,13 +510,13 @@ def test_strappend_dollar(client):
         "doc1", "$", {"a": "foo", "nested1": {"a": "hello"}, "nested2": {"a": 31}}
     )
     # Test multi
-    client.json().strappend("doc1", "bar", "$..a") == [6, 8, None]
+    assert client.json().strappend("doc1", "bar", "$..a") == [6, 8, None]
 
     # res = [{"a": "foobar", "nested1": {"a": "hellobar"}, "nested2": {"a": 31}}]
     # assert_resp_response(client, client.json().get("doc1", "$"), res, [res])
 
     # Test single
-    client.json().strappend("doc1", "baz", "$.nested1.a") == [11]
+    assert client.json().strappend("doc1", "baz", "$.nested1.a") == [11]
 
     # res = [{"a": "foobar", "nested1": {"a": "hellobarbaz"}, "nested2": {"a": 31}}]
     # assert_resp_response(client, client.json().get("doc1", "$"), res, [res])
@@ -527,7 +526,7 @@ def test_strappend_dollar(client):
         client.json().strappend("non_existing_doc", "$..a", "err")
 
     # Test multi
-    client.json().strappend("doc1", "bar", ".*.a") == 8
+    assert client.json().strappend("doc1", "bar", ".*.a") == 8
     # res = [{"a": "foo", "nested1": {"a": "hellobar"}, "nested2": {"a": 31}}]
     # assert_resp_response(client, client.json().get("doc1", "$"), res, [res])
 
@@ -548,8 +547,8 @@ def test_strlen_dollar(client):
     assert res1 == res2
 
     # Test single
-    client.json().strlen("doc1", "$.nested1.a") == [8]
-    client.json().strlen("doc1", "$.nested2.a") == [None]
+    assert client.json().strlen("doc1", "$.nested1.a") == [8]
+    assert client.json().strlen("doc1", "$.nested2.a") == [None]
 
     # Test missing key
     with pytest.raises(exceptions.ResponseError):
@@ -567,7 +566,7 @@ def test_arrappend_dollar(client):
         },
     )
     # Test multi
-    client.json().arrappend("doc1", "$..a", "bar", "racuda") == [3, 5, None]
+    assert client.json().arrappend("doc1", "$..a", "bar", "racuda") == [3, 5, None]
     res = [
         {
             "a": ["foo", "bar", "racuda"],
@@ -748,7 +747,7 @@ def test_arrpop_dollar(client):
         },
     )
     # Test multi (all paths are updated, but return result of last path)
-    client.json().arrpop("doc1", "..a", "1") is None
+    assert client.json().arrpop("doc1", "..a", "1") is None
     res = [{"a": [], "nested1": {"a": ["hello", "world"]}, "nested2": {"a": 31}}]
     assert_resp_response(client, client.json().get("doc1", "$"), res, [res])
 
